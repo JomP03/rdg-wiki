@@ -1,0 +1,101 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Floor Plan
+
+participant "Back-End" as BE <<component>>
+database "DataBase" as DB <<component>>
+
+-> BE: GET floors/floorPlants/{floorId}
+
+alt user authorized
+
+activate BE
+
+BE -> DB: find floor by id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+activate BE
+
+BE -> DB: find rooms by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt rooms found
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+activate BE
+
+BE -> DB: find passages by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passages found
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+activate BE
+
+BE -> DB: find elevators by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt elevators found
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+else user unauthorized
+
+  <-- BE: Response status code - 401
+
+end
+
+@enduml

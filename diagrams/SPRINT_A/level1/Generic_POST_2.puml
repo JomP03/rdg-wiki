@@ -1,0 +1,36 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Create Resource
+
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+-> RDG: POST resources/{...}
+
+activate RDG
+
+alt resource Created
+
+  <-- RDG: Response status code - 201
+
+else invalid input
+
+  <-- RDG: Response status code - 400
+
+else unauthorized
+
+  <-- RDG: Response status code - 401
+
+else resource already exists
+
+  <-- RDG: Response status code - 409
+
+else database unavailable
+
+  <-- RDG: Response status code - 503
+
+end
+
+@enduml

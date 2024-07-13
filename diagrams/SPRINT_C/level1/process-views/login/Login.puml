@@ -1,0 +1,37 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Login in the System
+
+actor "User" as U <<DEI User>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+participant "Auth0" as A0 <<external>>
+
+activate U
+
+U -> RDG:  Asks Login in the system
+
+activate RDG
+
+RDG --> U: Redirects to Auth0 Auth page
+
+U -> A0: Authenticates with Auth0
+activate A0
+
+A0 --> U: Redirects to RobDroneGo\n page and adds token \nto the browser
+deactivate A0
+note over RDG
+once on the RobDroneGo the User
+is redirected according to its role
+end note
+
+
+deactivate RDG
+
+deactivate U
+
+
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Edit Floor/Load Floor Plan
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: PATCH floors/{floorNumber?: floorNumber, \n floorDescription?: floorDescription, floorPlan?: floorPlan}
+
+'Find by Floor ID'
+
+activate BE
+
+BE -> DB: find by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find by Floor Number And Building ID'
+
+activate BE
+
+BE -> DB: find by floor number and building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor already exists
+
+  <-- BE: Response status code - 409
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor persisted
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

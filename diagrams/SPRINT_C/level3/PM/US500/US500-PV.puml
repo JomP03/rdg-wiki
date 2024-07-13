@@ -1,0 +1,46 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+skinparam defaultFontName JetBrains Mono
+
+title Find Task Sequence
+
+participant "Prolog Backend" as BE <<component>>
+
+-> BE: GET taskSequence?robisepId={...}
+
+activate BE
+
+BE -> : GET /prolog/campus
+
+BE <--: response
+
+note over BE
+    Campus data is processed and asserted
+    to knowledge base
+end note
+
+loop for each floor
+    BE -> : GET prolog/floorPlans/{floorId}
+
+    BE <--: response
+
+    note over BE
+        Floor data is processed and asserted
+        to knowledge base
+    end note
+end loop
+
+BE -> : GET /prolog/tasks/{robisepId}
+
+BE <--: response
+
+note over BE
+    Task data is processed and asserted
+    to knowledge base.
+end note
+
+<-- BE: response
+
+@enduml

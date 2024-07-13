@@ -1,0 +1,36 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title List Filtered {Resources}
+
+actor "User" as U <<DEI User>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+activate U
+
+U -> RDG:  Asks to list filtered {Resources}
+
+activate RDG
+
+U <-- RDG: Asks the user to select the filter
+
+U -> RDG:  Selects the filter
+
+U <-- RDG: Asks the user to select the filter values
+
+U -> RDG:  Input/select the filter values
+
+
+alt
+U <-- RDG: display filtered {Resources} list
+else no resources available
+U <-- RDG: display no filtered {Resources} message
+deactivate RDG
+end
+
+deactivate U
+
+
+@enduml

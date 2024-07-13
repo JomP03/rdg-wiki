@@ -1,0 +1,61 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Approve SignUp Request
+
+actor "User" as U <<Admin>>
+participant "PortalModule" as RPM <<component>>
+participant "UserManagementModule" as DAM <<component>>
+participant "Auth0" as A0 <<external>>
+
+activate U
+
+U -> RPM:  Selects a SignUp Request, adds \na comment and clicks on Accept
+activate RPM
+
+RPM -> DAM: PATCH SignUpRequests/{id}
+
+activate DAM
+alt signup not found
+DAM --> RPM: Response status code - 404
+RPM --> U: displays error message
+else user with same unique data*\nalready exists on the database
+end
+
+
+DAM -> A0: PATCH /api/v2/users/{userId}/roles
+
+activate A0
+alt success
+A0 --> DAM: Response status code - 200
+
+DAM -> DAM: Create User in database
+activate DAM
+deactivate DAM
+
+
+RPM <-- DAM: Response status code - 200
+
+U <-- RPM: Displays a success message and \nrefreshes the SignUp Request list
+
+else unsuccessful
+A0 --> DAM: Response error code - XXX
+deactivate A0
+
+alt
+
+else role not found on Auth0 (404)
+ RPM <-- DAM: Response status code - 404
+else  Auth0 unavailable
+ RPM <-- DAM: Response status code - 503
+ deactivate DAM
+end
+ U <-- RPM: display error message
+deactivate RPM
+end
+
+deactivate U
+
+@enduml

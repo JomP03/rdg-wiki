@@ -1,0 +1,60 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title List Filtered {Resources}
+
+actor "User" as U <<DEI User>>
+participant "PortalModule" as RPM <<component>>
+participant "DataAdministrationModule" as DAM <<component>>
+
+activate U
+
+U -> RPM:  Asks to list filtered {Resources}
+
+activate RPM
+
+U <-- RPM: Asks the user to select the filter
+
+U -> RPM:  Selects the filter
+
+U <-- RPM: Asks the user to select the filter values
+
+U -> RPM:  Input/select the filter values
+
+RPM -> DAM: GET resources/{...}
+
+activate DAM
+alt success
+RPM <-- DAM: Response status code - 200
+
+alt
+U <-- RPM: display filtered {Resources} list
+else no resources available
+U <-- RPM: display no {Resources} message
+end
+
+else unsuccessful
+
+alt entity not found
+note over DAM
+This happens when some filter
+ parameter is not found
+(e.g. a building provided in the
+ search query does not exist)
+end note
+
+ RPM <-- DAM: Response status code - 404
+else database unavailable
+ RPM <-- DAM: Response status code - 503
+deactivate DAM
+end
+ U<-- RPM: display error message
+
+
+deactivate RPM
+end
+deactivate U
+
+@enduml

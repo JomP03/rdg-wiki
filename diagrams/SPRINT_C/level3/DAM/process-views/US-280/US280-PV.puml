@@ -1,0 +1,80 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Edit Elevator
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: PATCH elevators/{\n brand?: brand, \n model?: model,\n serialNumber?: serialNumber,\n description?: description,\n elevatorPosition?: {xposition: xposition, yposition: yposition},\n floors?: [floorIds],\n}
+
+'Find by Domain ID'
+
+activate BE
+
+BE -> DB: find elevator by domain id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt elevator not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find by Floor ID'
+
+activate BE
+
+BE -> DB: find floor by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt elevator persisted
+
+  <-- BE: Response status code - 200
+
+else database unaveilable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

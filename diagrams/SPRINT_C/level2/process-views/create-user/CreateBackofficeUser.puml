@@ -1,0 +1,50 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Create Backoffice User
+
+actor "User" as U <<Admin>>
+participant "PortalModule" as RPM <<component>>
+participant "UserManagementModule" as DAM <<component>>
+participant "Auth0" as A0 <<external>>
+
+
+activate U
+
+U -> RPM:  Fills and submits\nCreate Backoffice User Form
+activate RPM
+RPM -> DAM: POST /Users
+activate DAM
+DAM -> A0: POST /api/v2/users
+activate A0
+alt success
+A0 --> DAM: Response status code - 201
+DAM -> A0: PATCH /api/v2/users/{userId}/roles
+A0 --> DAM: Response status code - 204
+RPM <-- DAM: Response status code - 201
+
+U <-- RPM: displays success message
+
+else unsuccessful
+A0 --> DAM: Response status code - XXX
+
+alt
+else invalid data
+ RPM <-- DAM: Response status code - 400
+else role not found on Auth0
+ RPM <-- DAM: Response status code - 404
+else user already exists
+ RPM <-- DAM: Response status code - 409
+else database or Auth0 unavailable
+ RPM <-- DAM: Response status code - 503
+ deactivate DAM
+end
+ U <-- RPM: display error message
+deactivate RPM
+end
+
+deactivate U
+
+@enduml

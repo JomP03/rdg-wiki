@@ -1,0 +1,82 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Accept Signup Request
+
+participant "C# Backend" as DAM <<component>>
+database "MySQL" as DB <<database>>
+
+-> DAM: PATCH /SignUpRequests/{id}/accept
+activate DAM
+DAM -> DB: Get SignUpRequest by id
+activate DB
+alt signup request not found
+DB --> DAM: returns null
+<-- DAM: Response status code - 404
+else success
+DB --> DAM: returns SignUpRequest
+deactivate DB
+end
+
+DAM -> DB: Get Actioner User by id
+activate DB
+alt user not found
+DB --> DAM: returns null
+<-- DAM: Response status code - 404
+else success
+DB --> DAM: returns User
+deactivate DB
+end
+DAM -> DAM: Create User
+activate DAM
+deactivate DAM
+DAM -> DB: Save User
+activate DB
+DB --> DAM: returns success
+deactivate DB
+
+DAM -> : PATCH /api/v2/users/{userId}/roles
+alt success
+DAM <--: Response status code - 204
+
+DAM -> DB: Save user
+activate DB
+DB --> DAM: returns success
+deactivate DB
+DAM -> DB: Update SignUpRequest with status \nACCEPTED and the Actioner User
+activate DB
+DB --> DAM: returns success
+deactivate DB
+
+
+else unsuccessful
+DAM <--: Response status code - XXX
+note over DAM
+Here we have all the error handling from the
+User entity creation, signup request update,
+Auth0 add role action & save and update actions
+from the database
+end note
+
+alt
+else invalid data
+  <-- DAM: Response status code - 400
+else role not found on Auth0
+ <-- DAM: Response status code - 404
+else user already exists
+ <-- DAM: Response status code - 409
+else database or Auth0 unavailable
+ <-- DAM: Response status code - 503
+ deactivate DAM
+end
+note over DAM
+If there exists any kind of error, when performing database
+operations there is a remove role action that will be triggered
+to the role from the user on Auth0
+end note
+end
+
+
+@enduml

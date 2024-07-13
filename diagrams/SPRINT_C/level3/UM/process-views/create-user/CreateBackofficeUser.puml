@@ -1,0 +1,61 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Create Backoffice User
+
+participant "C# Backend" as DAM <<component>>
+database "MySQL" as DB <<database>>
+
+-> DAM: POST /Users
+activate DAM
+DAM -> DB: Get role by id
+activate DB
+alt role not found
+DB --> DAM: null
+<-- DAM: Response status code - 404
+else success
+DB --> DAM: Role
+deactivate DB
+end
+
+DAM -> : POST /api/v2/users
+alt success
+DAM <--: Response status code - 201
+DAM -> : PATCH /api/v2/users/{userId}/roles
+DAM <--: Response status code - 204
+DAM -> DB: Save user
+activate DB
+DB --> DAM: returns success
+deactivate DB
+
+
+else unsuccessful
+DAM <--: Response status code - XXX
+note over DAM
+Here we have all the error handling from the
+User entity creation, Auth0 and the database
+save action
+end note
+
+alt
+else invalid data
+  <-- DAM: Response status code - 400
+else role not found on Auth0
+ <-- DAM: Response status code - 404
+else user already exists
+ <-- DAM: Response status code - 409
+else database or Auth0 unavailable
+ <-- DAM: Response status code - 503
+ deactivate DAM
+end
+note over DAM
+If there exists any kind of error, when saving to the database
+there is a delete action that will be triggered to remove the user
+from Auth0
+end note
+end
+
+
+@enduml

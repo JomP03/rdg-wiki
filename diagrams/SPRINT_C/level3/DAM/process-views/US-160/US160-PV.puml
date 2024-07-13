@@ -1,0 +1,53 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+skinparam defaultFontName JetBrains Mono
+
+title Edit Building
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: PATCH buildings/{buildingId}/{buildingName?: buildingName,\n buildingDimensions?: buildingDimensions,buildingDescription?: buildingDescription}
+
+'Find by Domain ID'
+activate BE
+BE -> DB: find by building Id
+activate DB
+DB --> BE:
+deactivate DB
+
+alt building with that id does not exist
+  <-- BE: Response status code - 404
+else database unavailable
+  <-- BE: Response status code - 503
+end
+
+alt user input is invalid
+  <-- BE: Response status code - 400
+end
+
+
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building updated
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

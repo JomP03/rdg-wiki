@@ -1,0 +1,54 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Task Sequence
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET tasks/sequence?algorithm={algorithm}
+
+note over BE: 'algorithm' can either be \n'PERMUTATION' or 'GENETIC'
+
+'Find by State'
+activate BE
+BE -> DB: find by task state
+activate DB
+DB --> BE:
+deactivate DB
+
+alt unsuccessful - no tasks found
+
+<-- BE : Response status code - 400
+
+end
+
+note over BE: For each task in the list \npick unique robisep ids
+
+loop for each unique robisep id
+
+BE -> : GET taskSequence?robisepId={robisepId}
+
+BE <-- : Response status code - 200
+
+note over BE: Alter tasks corresponding for each \nrobisep id to 'PLANNED'
+
+loop for each task in the list
+
+BE -> DB: update
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+end
+
+end
+
+<-- BE : Response status code - 200
+
+@enduml

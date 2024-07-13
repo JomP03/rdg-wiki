@@ -1,0 +1,39 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Edit {Resource}
+
+actor "User" as U <<DEI User>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+activate U
+
+U -> RDG:  Ask to edit {Resource}
+
+activate RDG
+
+U <-- RDG: displays {Resource} Edit Form
+
+U -> RDG:  Fills and submits {Resource} Edit Form
+
+alt
+
+U <-- RDG: displays success message and updates the {Resource} list
+
+else required fields are missing
+
+U <-- RDG: displays warning message
+
+else invalid data provided
+
+U <-- RDG: displays error message
+
+deactivate RDG
+
+end
+
+deactivate U
+
+@enduml

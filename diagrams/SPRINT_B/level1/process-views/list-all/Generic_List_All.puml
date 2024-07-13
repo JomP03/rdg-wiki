@@ -1,0 +1,25 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title List All {Resources}
+
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+-> RDG:  onLoad {Resources} Page
+
+activate RDG
+
+alt
+
+  <-- RDG: display {Resources} list
+
+else no resources available
+
+  <-- RDG: display no {Resources} message
+
+deactivate RDG
+end
+
+@enduml

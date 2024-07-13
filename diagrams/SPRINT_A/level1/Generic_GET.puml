@@ -1,0 +1,28 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Retrieve Resources
+
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+-> RDG: GET resources/{...}
+
+activate RDG
+
+alt resources retrieved
+
+  <-- RDG: Response status code - 200
+
+else unauthorized
+
+  <-- RDG: Response status code - 401
+
+else database unavailable
+
+  <-- RDG: Response status code - 503
+
+end
+
+@enduml

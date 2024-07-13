@@ -1,0 +1,31 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Create {Resource}
+
+actor "User" as U <<DEI User>>
+participant "Frontend" as FE <<component>>
+
+activate U
+
+U-> FE: Fills and submits the \n{resource} Create Form
+activate FE
+
+FE -> : POST {resources}
+FE <-- : HTTP response
+
+alt success
+
+U <-- FE : displays success message\n and refreshes the listed data
+
+else unsuccessful
+
+U <-- FE : display error message
+
+end
+
+deactivate FE
+
+@enduml

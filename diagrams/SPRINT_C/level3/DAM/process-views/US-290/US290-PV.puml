@@ -1,0 +1,58 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Building Elevators
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET elevators/{buildingId}
+
+'Find Building by Domain ID'
+
+activate BE
+
+BE -> DB: find building by domain id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find Elevators by Building ID'
+
+activate BE
+
+BE -> DB: find elevators by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt elevators listed
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

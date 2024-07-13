@@ -1,0 +1,36 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Create {Resource}
+
+actor "User" as U <<DEI User>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+activate U
+
+U -> RDG:  Fills and submits the {Resource} Create Form
+
+activate RDG
+
+alt
+
+U <-- RDG: displays success message and updates the {Resource} list
+
+else required fields are missing
+
+U <-- RDG: displays warning message
+
+else invalid data provided
+
+U <-- RDG: displays error message
+deactivate RDG
+
+end
+
+deactivate U
+
+
+
+@enduml

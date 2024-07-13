@@ -1,0 +1,33 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List All {resources}
+
+participant "Frontend" as FE <<component>>
+
+-> FE: onLoad
+
+activate FE
+
+FE -> : GET {resources}
+FE <-- : HTTP response
+
+alt response contains {resources}
+
+<-- FE : displays the {resources} view data
+
+else empty response body
+
+<-- FE : display no {resources} message
+
+else unsuccessful
+
+<-- FE : display error message
+
+deactivate FE
+
+end
+
+@enduml

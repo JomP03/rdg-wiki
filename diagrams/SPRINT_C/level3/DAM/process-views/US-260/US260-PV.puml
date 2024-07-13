@@ -1,0 +1,80 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Passages Between Buildings
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET passages/filter?firstBuildingId=firstBuildingId&lastBuildingId=lastBuildingId
+
+'Find by Building ID (startpoint)'
+
+activate BE
+
+BE -> DB: find by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find by Building ID (endpoint)'
+
+activate BE
+
+BE -> DB: find by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find Passages Between Buildings'
+
+activate BE
+
+BE -> DB: find passages between buildings
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passages between \nbuildings will be listed
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

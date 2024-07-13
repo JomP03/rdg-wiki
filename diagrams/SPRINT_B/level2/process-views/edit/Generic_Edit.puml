@@ -1,0 +1,47 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Edit {Resource}
+
+actor "User" as U <<DEI User>>
+participant "PortalModule" as RPM <<component>>
+participant "DataAdministrationModule" as DAM <<component>>
+
+activate U
+
+U -> RPM:  Ask to edit {Resource}
+activate RPM
+
+U <-- RPM: displays {Resource} Edit Form
+
+U -> RPM:  Fills and submits {Resource} Edit Form
+
+RPM -> DAM: PATCH resources/{resourceId}
+
+activate DAM
+alt success
+RPM <-- DAM: Response status code - 200
+
+U <-- RPM: displays success message
+
+else unsuccessful
+alt
+else invalid data
+ RPM <-- DAM: Response status code - 400
+else resource not found
+ RPM <-- DAM: Response status code - 404
+else entity already exists
+ RPM <-- DAM: Response status code - 409
+else database unavailable
+ RPM <-- DAM: Response status code - 503
+ deactivate DAM
+end
+ U <-- RPM: display error message
+deactivate RPM
+end
+
+deactivate U
+
+@enduml

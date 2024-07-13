@@ -1,0 +1,35 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Edit {Resource}
+
+actor "User" as U <<DEI User>>
+participant "Frontend" as FE <<component>>
+
+activate U
+
+U-> FE: ask to edit {resource}
+activate FE
+
+U <-- FE: displays {resource} Edit Form
+
+U -> FE: fills and submits {resource} Edit Form
+
+FE -> : PATCH {resources}/{resourceId}
+FE <-- : HTTP response
+
+alt success
+
+U <-- FE : displays success message\n and refreshes the listed data
+
+else unsuccessful
+
+U <-- FE : display error message
+
+end
+
+deactivate FE
+
+@enduml

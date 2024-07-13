@@ -1,0 +1,58 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Building Floors With Passage
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET floors/inBuilding/{buildingId}/withPassage
+
+'Find by Building ID In Building Repository'
+
+activate BE
+
+BE -> DB: find by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find by Floors With Passage By Building ID In Floor Repository'
+
+activate BE
+
+BE -> DB: find floors with passage by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floors with passage listed
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

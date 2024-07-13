@@ -1,0 +1,70 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Get all robisep with given nickname or task type
+
+participant "Back-End" as BE <<component>>
+database "DataBase" as DB <<component>>
+
+-> BE: GET robisep/{nickname: nickname, taskType: taskType}
+
+alt user autothorized
+
+
+'Find by nickname'
+
+alt nickname not null
+
+activate BE
+
+BE -> DB: find by nickname
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt success
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+
+'Find by task type'
+
+else taskType not null
+
+
+
+activate BE
+
+BE -> DB: find by task type
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt success
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+    <-- BE: Response status code - 503
+
+end
+
+end
+
+@enduml

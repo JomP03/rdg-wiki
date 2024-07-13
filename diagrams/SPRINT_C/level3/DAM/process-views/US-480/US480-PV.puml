@@ -1,0 +1,35 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Requested Tasks
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET tasks/state?state=REQUESTED
+
+'Find by Building ID (startpoint)'
+
+activate BE
+
+BE -> DB: find by state
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt tasks with state REQUESTED found
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

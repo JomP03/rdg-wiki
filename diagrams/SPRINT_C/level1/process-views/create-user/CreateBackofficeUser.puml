@@ -1,0 +1,32 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Create Backoffice User
+
+actor "User" as U <<Admin>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+participant "Auth0" as A0 <<external>>
+
+activate U
+
+U -> RDG:  Fills and submits\nCreate Backoffice User Form
+
+activate RDG
+
+RDG -> A0: Creates the User in Auth0
+activate A0
+A0 --> RDG: Returns the User IAM ID
+RDG -> A0: Adds the Role to the User in Auth0
+A0 --> RDG: Returns success
+deactivate A0
+
+
+RDG --> U: Displays success message
+deactivate RDG
+deactivate U
+
+
+
+@enduml

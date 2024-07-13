@@ -1,0 +1,28 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title Retrieve Resources
+
+participant "DataAdministrationModule" as DAM <<component>>
+
+-> DAM: GET resources/{...}
+
+activate DAM
+
+alt resources retrieved
+
+  <-- DAM: Response status code - 200
+
+else unauthorized
+
+  <-- DAM: Response status code - 401
+
+else database unavailable
+
+  <-- DAM: Response status code - 503
+
+end
+
+@enduml

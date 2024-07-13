@@ -1,0 +1,66 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Building Floors
+
+participant "Back-End" as BE <<component>>
+database "DataBase" as DB <<component>>
+
+-> BE: GET floors/{byBuildingId}
+
+alt user authorized
+
+'Find by Building ID In Building Repository'
+
+activate BE
+
+BE -> DB: find by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find by Building ID in Floor Repository'
+
+activate BE
+
+BE -> DB: find by building id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floors listed
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+else user unauthorized
+
+  <-- BE: Response status code - 401
+
+end
+
+@enduml

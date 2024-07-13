@@ -1,0 +1,44 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+skinparam defaultFontName JetBrains Mono
+
+title GET Buildings with min and max floors
+
+participant "Back-End" as BE <<component>>
+database "DataBase" as DB <<component>>
+
+-> BE: GET buildings/filter?minFloors=1&maxFloors=5
+
+alt user authorized
+
+'Find All'
+
+activate BE
+
+BE -> DB: find with min\n and max floors
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+  <-- BE: Response status code - 200
+
+alt database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+else user unauthorized
+
+  <-- BE: Response status code - 401
+
+end
+
+
+
+@enduml

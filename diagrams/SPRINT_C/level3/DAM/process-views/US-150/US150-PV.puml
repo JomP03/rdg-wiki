@@ -1,0 +1,60 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Create Building
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: POST buildings/{domainId?: domainId, buildingName: buildingName,buildingDimensions: buildingDimensions,\n buildingDescription: buildingDescription, buildingCode: buildingCode}
+
+'Find by Domain ID'
+activate BE
+BE -> DB: find by building Id
+activate DB
+DB --> BE:
+deactivate DB
+
+alt building with that id already exists
+  <-- BE: Response status code - 409
+else database unavailable
+  <-- BE: Response status code - 503
+end
+
+'Find by Building Code'
+activate BE
+BE -> DB: find by building code
+activate DB
+DB --> BE:
+deactivate DB
+
+alt building with that code already exists
+  <-- BE: Response status code - 409
+else database unavailable
+  <-- BE: Response status code - 503
+end
+
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt building persisted
+
+  <-- BE: Response status code - 201
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

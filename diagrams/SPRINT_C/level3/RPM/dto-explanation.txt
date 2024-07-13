@@ -1,0 +1,17 @@
+In the level 3 process views diagrams we are not representing dto's to avoid cluttering the diagram and to facilitate the
+understanding of the processes.
+
+Having that said, here we'll have a small explanation of the dto's used in the RPM module.
+
+For the RPM module we have three types of dto, inDto, outDto and viewDto:
+
+inDto is used to receive data from the backend;
+outDto is used to send data to the backend;
+viewDto is used to display data in the view.
+
+The component "Component" of the PV's diagrams uses the mappers to convert the dto's.
+
+When it needs to send data to the "View" component, it uses the viewDto.
+When it needs to send data to the "Service" component, it uses the outDto.
+When it receives data from the "Service" component, it uses the inDto.
+

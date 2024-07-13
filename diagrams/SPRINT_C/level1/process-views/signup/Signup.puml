@@ -1,0 +1,36 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Request SignUp
+
+actor "User" as U <<DEI User>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+participant "Auth0" as A0 <<external>>
+
+activate U
+
+U -> RDG:  Asks SignUp in the system
+
+activate RDG
+
+RDG --> U: Redirects to Auth0 Auth page
+
+U -> A0: SignUp in Auth0
+activate A0
+
+A0 --> U: Redirects to RobDroneGo SignUp\n page and adds token to the browser
+deactivate A0
+
+U -> RDG: Fills with personal data and submits
+
+RDG -> U: Informs that he has to wait for approval
+
+deactivate RDG
+
+deactivate U
+
+
+
+@enduml

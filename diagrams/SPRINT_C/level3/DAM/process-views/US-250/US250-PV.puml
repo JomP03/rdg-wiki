@@ -1,0 +1,185 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Edit Passage
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: PATCH passages/{passageId}/{passageStartPoint?: {floorId?: floorId, firstCoordinates?: {x: x, y: y}, lastCoordinates?: {x: x, y: y}}, \n passageEndPoint?: {floorId?: floorId, firstCoordinates?: {x: x, y: y}, lastCoordinates?: {x: x, y: y}}}
+
+'Find by Passage ID'
+
+activate BE
+
+BE -> DB: find by passage id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find by Floor ID'
+
+activate BE
+
+BE -> DB: find by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Is There A Passage Between Floor And Building'
+activate BE
+
+BE -> DB: is there a passage between floor and building
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage already exists
+
+
+  <-- BE: Response status code - 409
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find Passage By Floors'
+activate BE
+
+BE -> DB: find by floors
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage already exists
+
+  <-- BE: Response status code - 409
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find by Floor ID'
+
+activate BE
+
+BE -> DB: find by floor id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt floor not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Is There A Passage Between Floor And Building'
+activate BE
+
+BE -> DB: is there a passage between floor and building
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage already exists
+
+
+  <-- BE: Response status code - 409
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Find Passage By Floors'
+activate BE
+
+BE -> DB: find by floors
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage already exists
+
+  <-- BE: Response status code - 409
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt passage persisted
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

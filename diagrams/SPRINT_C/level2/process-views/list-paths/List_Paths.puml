@@ -1,0 +1,45 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title List path from Room 'A' to Room 'B'
+
+actor "User" as U <<DEI User>>
+participant "PortalModule" as RPM <<component>>
+participant "DataAdministrationModule" as DAM <<component>>
+participant "PlanningModule" as PM <<component>>
+
+activate U
+
+
+U -> RPM:  Selects Room 'A' and Room 'B'\n and asks to consult the path between them
+
+activate RPM
+
+RPM -> DAM: GET tasks/path?originFloor=...&originRoom=...\n&destinationFloor=...&destinationRoom=...
+
+activate DAM
+
+DAM -> PM: GET prolog/paths?originFloor=...&destinationFloor=...\n&originCel=...&destinationCel=...
+
+activate PM
+
+PM -> DAM: GET prolog/campus
+DAM --> PM: Response status code - 200
+loop for each floor
+PM -> DAM: GET prolog/floorPlans/{floorId}
+DAM --> PM: Response status code - 200
+end
+
+PM ---> DAM: Response status code - 200
+
+deactivate PM
+
+RPM <-- DAM: Response status code - 200
+deactivate DAM
+U <-- RPM: display path information
+deactivate RPM
+deactivate U
+
+@enduml

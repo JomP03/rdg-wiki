@@ -1,0 +1,54 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Disable Robisep
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: PATCH robiseps/{state: state}
+
+'Find by Robisep ID'
+
+activate BE
+
+BE -> DB: find by robisep id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt robisep not found
+
+  <-- BE: Response status code - 404
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+'Persist Robisep with state updated'
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt robisep persisted\n with state updated
+
+  <-- BE: Response status code - 200
+
+else database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

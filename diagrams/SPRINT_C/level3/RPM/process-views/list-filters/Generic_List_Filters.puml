@@ -1,0 +1,46 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title List Filtered {Resources}
+
+actor "User" as U <<DEI User>>
+participant "Frontend" as FE <<component>>
+
+activate U
+
+U -> FE:  Asks to list filtered {Resources}
+
+activate FE
+
+U <-- FE: Asks the user to select the filter
+
+U -> FE:  Selects the filter
+
+U <-- FE: Asks the user to select the filter values
+
+U -> FE:  Input/select the filter values
+
+FE -> : GET {resources}/{...}
+FE <-- : HTTP response
+
+alt response contains {resources}
+
+U <-- FE : displays the {resources} view data
+
+else empty response body
+
+U <-- FE : display no {resources} message
+
+else unsuccessful
+
+U <-- FE : display error message
+
+end
+
+deactivate FE
+
+deactivate U
+
+@enduml

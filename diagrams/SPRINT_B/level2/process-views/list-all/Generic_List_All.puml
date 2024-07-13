@@ -1,0 +1,42 @@
+@startuml Process View - Level 2
+
+autonumber
+skinparam packageStyle rect
+
+title List All {Resources}
+
+participant "PortalModule" as RPM <<component>>
+participant "DataAdministrationModule" as DAM <<component>>
+
+-> RPM:  onLoad {Resources} Page
+
+activate RPM
+
+RPM -> DAM: GET resources/{...}
+
+activate DAM
+alt success
+RPM <-- DAM: Response status code - 200
+
+alt
+<-- RPM: display {Resources} list
+else no resources available
+<-- RPM: display no {Resources} message
+end
+
+
+else database unavailable
+ RPM <-- DAM: Response status code - 503
+ <-- RPM: display error message
+
+ deactivate DAM
+
+ deactivate RPM
+end
+
+
+
+
+
+
+@enduml

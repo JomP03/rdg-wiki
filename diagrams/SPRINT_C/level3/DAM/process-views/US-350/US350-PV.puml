@@ -1,0 +1,79 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Create RobisepType
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: POST robisepType/{domainId?: domainId, designation: designation, \n brand: brand, model: model, tasksType: tasksType}
+
+'Find by Domain Id'
+
+activate BE
+
+BE -> DB: find by domain Id
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt robisep type with given domainId already exists
+
+  <-- BE: Response status code - 409
+
+else database unaveilable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+'Find by Designation'
+
+activate BE
+
+BE -> DB: find by designation
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt robisep type with given designation already exists
+
+  <-- BE: Response status code - 409
+
+else database unaveilable
+
+  <-- BE: Response status code - 503
+
+end
+
+
+activate BE
+
+BE -> DB: save
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt robisep type persisted
+
+  <-- BE: Response status code - 201
+
+else database unaveilable
+
+  <-- BE: Response status code - 503
+
+end
+
+@enduml

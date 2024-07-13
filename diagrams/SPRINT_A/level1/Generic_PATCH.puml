@@ -1,0 +1,40 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Update Resource
+
+participant "RobDroneGo" as RDG <<system (C4)>>
+
+-> RDG: PATCH resources/{...}
+
+activate RDG
+
+alt resources Updated
+
+  <-- RDG: Response status code - 200
+
+else invalid input
+
+  <-- RDG: Response status code - 400
+
+else unauthorized
+
+  <-- RDG: Response status code - 401
+
+else necessary resource not found
+
+  <-- RDG: Response status code - 404
+
+else resource already exists
+
+  <-- RDG: Response status code - 409
+
+else database unavailable
+
+  <-- RDG: Response status code - 503
+
+end
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml Process View - Level 1
+
+autonumber
+skinparam packageStyle rect
+
+title Accept SignUp Request
+
+actor "User" as U <<Admin>>
+participant "RobDroneGo" as RDG <<system (C4)>>
+participant "Auth0" as A0 <<external>>
+
+activate U
+
+U -> RDG:  Selects a SignUp Request, adds \na comment and clicks on Accept
+
+activate RDG
+
+RDG --> A0: Adds the "EndUser" Role \nto the user on Auth0
+
+activate A0
+
+A0 --> RDG: Returns success
+deactivate A0
+
+RDG --> U: Displays a success message and \nrefreshes the SignUp Request list
+
+deactivate RDG
+
+deactivate U
+
+
+
+@enduml

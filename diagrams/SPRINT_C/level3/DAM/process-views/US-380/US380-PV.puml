@@ -1,0 +1,35 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title Get all robisep
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET robisep/
+
+'Find all'
+
+activate BE
+
+BE -> DB: find all
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+alt database unaveilable
+
+  <-- BE: Response status code - 503
+
+else success
+
+    <-- BE: Response status code - 200
+
+end
+
+@enduml

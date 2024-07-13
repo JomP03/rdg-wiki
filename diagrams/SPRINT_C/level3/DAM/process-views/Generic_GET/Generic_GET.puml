@@ -1,0 +1,42 @@
+@startuml Process View - Level 3
+
+autonumber
+skinparam packageStyle rect
+
+title GET resources
+
+participant "Node Backend" as BE <<component>>
+database "Mongo DataBase" as DB <<component>>
+
+-> BE: GET resources
+
+alt user authorized
+
+'Find All'
+
+activate BE
+
+BE -> DB: find all
+
+activate DB
+
+DB --> BE:
+
+deactivate DB
+
+  <-- BE: Response status code - 200
+
+alt database unavailable
+
+  <-- BE: Response status code - 503
+
+end
+
+else user unauthorized
+
+  <-- BE: Response status code - 401
+
+end
+
+
+@enduml
